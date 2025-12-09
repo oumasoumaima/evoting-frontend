@@ -1,0 +1,124 @@
+.vote-page {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.vote-page h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 18px;
+    color: #666;
+}
+
+.message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.vote-page form {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.vote-page input,
+.vote-page select {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.vote-page input:focus,
+.vote-page select:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.vote-page button {
+    padding: 12px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.vote-page button:hover {
+    background-color: #0b7dda;
+}
+
+.vote-page button:active {
+    transform: scale(0.98);
+}
+
+.candidates-list {
+    margin-top: 30px;
+}
+
+.candidates-list h3 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.candidate-card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.candidate-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.candidate-card h4 {
+    color: #2196F3;
+    margin-bottom: 10px;
+}
+
+.candidate-card p {
+    color: #666;
+    margin: 5px 0;
+    line-height: 1.6;
+}
+
+.candidate-card p strong {
+    color: #333;
+}
