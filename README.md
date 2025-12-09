@@ -317,7 +317,7 @@ resultService {
 ## 🚀 Installation et Démarrage
 
 ### Prérequis
-- **Java 17+**
+- **Java 21**
 - **Maven 3.8+**
 - **Node.js 16+** et **npm**
 
@@ -614,17 +614,3 @@ rm -rf data/
 - 🗄️ **Base de données** : PostgreSQL en production
 - 🧪 **Tests** : JUnit, Mockito, TestContainers
 - 🚀 **Déploiement** : Docker Compose / Kubernetes
-
----
-
-## 👨‍💻 Auteurs
-
-Projet développé dans le cadre d'un apprentissage des architectures microservices avec Spring Boot et React.
-
-## 📄 Licence
-
-MIT License - Libre d'utilisation à des fins éducatives.
-
----
-
-**🎉 Merci d'utiliser notre système de vote électronique !**
