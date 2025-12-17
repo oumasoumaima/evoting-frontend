@@ -1,0 +1,268 @@
+\documentclass[12pt, a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{float}
+\usepackage{fancyhdr}
+
+\geometry{hmargin=2.5cm,vmargin=2.5cm}
+
+% Configuration des snippets de code
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{frame=tb,
+  backgroundcolor=\color{backcolour},
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\pagestyle{fancy}
+\fancyhead[L]{Rapport de Projet}
+\fancyhead[R]{Système de Vote Électronique}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+% PAGE DE GARDE
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+        
+        \Huge
+        \textbf{Système de Vote Électronique Sécurisé}
+        
+        \vspace{0.5cm}
+        \LARGE
+        Architecture Microservices et Frontend Réactif
+        
+        \vspace{1.5cm}
+        
+        \textbf{Rapport de Projet Fin d'Études}
+        
+        \vfill
+        
+        \includegraphics[width=0.4\textwidth]{example-image} % Remplacer par un logo si disponible
+        
+        \vfill
+        
+        \Large
+        \textbf{Réalisé par :}\\
+        [Votre Nom]
+        
+        \vspace{0.8cm}
+        
+        \textbf{Encadré par :}\\
+        [Nom de l'encadrant]
+        
+        \vspace{0.8cm}
+        
+        \Large
+        Année Universitaire 2024-2025
+        
+    \end{center}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\chapter{Introduction Générale}
+
+\section{Contexte du Projet}
+À l'ère de la transformation numérique, la modernisation des processus démocratiques est devenue un enjeu majeur. Les systèmes de vote traditionnels, bien que robustes, souffrent de lenteurs logistiques, de coûts élevés et d'un manque de transparence en temps réel. Le projet "SecureVote" vise à pallier ces limitations en proposant une plateforme de vote électronique sécurisée, transparente et accessible.
+
+\section{Problématique}
+Comment garantir l'intégrité, l'anonymat et la transparence d'un scrutin tout en offrant une expérience utilisateur fluide et moderne ? Les défis techniques incluent la gestion de la charge lors des pics de votes, la sécurité des données sensibles (CIN) et la prévention des doubles votes.
+
+\section{Objectifs du Projet}
+Les principaux objectifs sont :
+\begin{itemize}
+    \item \textbf{Sécurité} : Authentification robuste via CIN et vérification d'éligibilité.
+    \item \textbf{Intégrité} : Un électeur ne peut voter qu'une seule fois (principe "One Man, One Vote").
+    \item \textbf{Transparence} : Calcul et affichage des résultats en temps réel.
+    \item \textbf{Scalabilité} : Architecture capable de supporter une montée en charge grâce aux microservices.
+    \item \textbf{Expérience Utilisateur} : Interface moderne et intuitive (Glassmorphism).
+\end{itemize}
+
+\chapter{Architecture Technique}
+
+\section{Vue d'Ensemble}
+Le système repose sur une architecture distribuée basée sur des \textbf{microservices}. Cette approche permet de découpler les fonctionnalités métiers, facilitant ainsi la maintenance, le déploiement et l'indépendance des équipes de développement.
+
+\subsection{Stack Technologique}
+\textbf{Backend :}
+\begin{itemize}
+    \item \textbf{Langage} : Java 17+
+    \item \textbf{Framework} : Spring Boot 3.x
+    \item \textbf{Cloud} : Spring Cloud (Netflix Eureka, Gateway, OpenFeign)
+    \item \textbf{Base de Données} : H2 (In-memory/File persistence) pour le développement rapide.
+\end{itemize}
+
+\textbf{Frontend :}
+\begin{itemize}
+    \item \textbf{Framework} : React 18
+    \item \textbf{Styling} : Tailwind CSS
+    \item \textbf{Animations} : Framer Motion
+    \item \textbf{Communication} : Axios
+\end{itemize}
+
+\section{Architecture Microservices}
+Le backend est composé de cinq services distincts assurant une séparation claire des responsabilités :
+
+\begin{enumerate}
+    \item \textbf{Discovery Service (Eureka)} : Agit comme un annuaire. Tous les microservices s'y enregistrent au démarrage, permettant une découverte dynamique des services sans coder les adresses IP en dur.
+    \item \textbf{Gateway Service} : Point d'entrée unique pour le frontend. Il route les requêtes vers les microservices appropriés et gère les configurations CORS (Cross-Origin Resource Sharing).
+    \item \textbf{Voter Service} : Gère l'enregistrement des électeurs et la vérification de leur éligibilité.
+    \item \textbf{Vote Service} : Cœur du système, il gère la soumission des votes et communique avec les autres services pour valider les règles métier.
+    \item \textbf{Result Service} : Agrège et calcule les résultats du scrutin pour un affichage en temps réel.
+\end{enumerate}
+
+\chapter{Conception et Implémentation Backend}
+
+\section{Diagramme de Classe Global}
+L'implémentation respecte rigoureusement le diagramme de classe conçu, articulé autour de trois domaines principaux.
+
+\section{Service Électeur (Voter Service)}
+Ce service expose une API REST sur le port \texttt{8081}.
+
+\subsection{Modèle de Données (Voter)}
+L'entité \texttt{Voter} contient les informations sensibles et statutaires de l'électeur.
+\begin{lstlisting}[language=Java]
+@Entity
+public class Voter {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(unique = true)
+    private String cin; // Identifiant unique
+    private String firstName;
+    private String lastName;
+    private Boolean hasVoted = false; // Previent le double vote
+    private Boolean isActive = true;
+    // ... getters et setters
+}
+\end{lstlisting}
+
+\subsection{VoterRepository}
+Interface étendant \texttt{JpaRepository} incluant une méthode personnalisée pour trouver un électeur par CIN :
+\texttt{Optional<Voter> findByCin(String cin);}
+
+\section{Service de Vote (Vote Service)}
+Ce service, sur le port \texttt{8082}, orchestre le processus de vote.
+
+\subsection{Flux de Soumission d'un Vote}
+La méthode \texttt{submitVote} dans \texttt{VoteController} suit une logique transactionnelle stricte :
+1.  Réception de la requête (CIN, ID Candidat).
+2.  Vérification de l'existence de l'électeur via \texttt{VoterRestClient} (communication inter-service).
+3.  Vérification si l'électeur a déjà voté (\texttt{hasVoted}).
+4.  Si éligible, enregistrement du vote.
+5.  Mise à jour du statut de l'électeur (\texttt{hasVoted = true}).
+6.  Notification asynchrone ou appel REST vers le \texttt{ResultService} pour incrémenter le compteur.
+
+\begin{lstlisting}[language=Java]
+// Exemple simpilié de logique dans VoteService
+public Vote submitVote(VoteRequest request) {
+    VoterModel voter = voterRestClient.findVoter(request.getCin());
+    if (voter.getHasVoted()) {
+        throw new AlreadyVotedException("Ce citoyen a deja vote.");
+    }
+    // ... logique d'enregistrement
+    voterRestClient.markAsVoted(request.getCin());
+}
+\end{lstlisting}
+
+\section{Service de Résultats (Result Service)}
+Tournant sur le port \texttt{8083}, il est optimisé pour la lecture.
+
+\subsection{Calcul des Résultats}
+Le \texttt{ResultCalculationService} maintient les totaux par candidat. Il expose un endpoint \texttt{GET /results} consommé par le frontend pour afficher les graphiques en temps réel. Il utilise une entité \texttt{VoteResult} qui stocke le nom du candidat et le nombre total de voix.
+
+\chapter{Implémentation Frontend (React)}
+
+\section{Design System et UX}
+L'interface utilisateur a été entièrement repensée pour offrir une expérience "Premium" et moderne.
+\begin{itemize}
+    \item \textbf{Glassmorphism} : Utilisation intensive de la transparence, du flou (\texttt{backdrop-blur}) et de bordures subtiles pour créer de la profondeur.
+    \item \textbf{Mode Sombre par défaut} : Palette de couleurs "Navy/Slate" offrant un contraste élevé et une esthétique professionnelle.
+    \item \textbf{Réactivité} : L'interface s'adapte à toutes les tailles d'écran (Mobile First avec Tailwind CSS).
+\end{itemize}
+
+\section{Composants Principaux}
+
+\subsection{Page d'Inscription (VoterRegistration.js)}
+Formulaire sécurisé avec validation en temps réel.
+\begin{itemize}
+    \item Utilisation de \texttt{useState} pour la gestion du formulaire.
+    \item Appel API via \texttt{voterService.register()}.
+    \item Feedback utilisateur immédiat (Message succès/erreur).
+    \item \textbf{Redirection automatique} : Après succès, l'utilisateur est redirigé vers la page de vote après 2 secondes via \texttt{useNavigate}.
+\end{itemize}
+
+\subsection{Page de Vote (VotePage.js)}
+Affiche la liste des candidats sous forme de cartes interactives. L'utilisateur sélectionne un candidat et confirme son choix. Cette page gère les appels transactionnels vers le backend.
+
+\subsection{Tableau de Bord des Résultats (Results.js)}
+Page riche en données visualisant l'issue du scrutin.
+\begin{itemize}
+    \item **Graphiques** : Utilisation de la librairie \texttt{recharts} pour générer des diagrammes en barres dynamiques.
+    \item **Rafraîchissement** : Utilisation de \texttt{setInterval} pour poller le backend toutes les 30 secondes et mettre à jour les données sans rechargement de page.
+    \item **Indicateurs KPI** : Affichage clair du taux de participation et du candidat en tête.
+\end{itemize}
+
+\section{Communication Client-Serveur}
+Le fichier \texttt{api.js} centralise les appels Axios.
+\begin{lstlisting}[language=JavaScript]
+const VOTER_API_URL = 'http://localhost:8081'; // Direct access or via Gateway
+const VOTE_API_URL = 'http://localhost:8082';
+
+export const voterService = {
+  register: (voter) => axios.post(`${VOTER_API_URL}/voters`, voter),
+  // ...
+};
+\end{lstlisting}
+
+\chapter{Sécurité et Déploiement}
+
+\section{Gestion des CORS}
+L'architecture découplée (Frontend port 3001, Backend ports 808x) impose une gestion stricte des règles CORS (Cross-Origin Resource Sharing). Chaque microservice ainsi que la Gateway ont été configurés pour autoriser les requêtes provenant de l'origine du frontend :
+\texttt{allowed-origins: "http://localhost:3001"}
+
+\section{Intégrité des Données}
+\begin{itemize}
+    \item \textbf{Unicité du CIN} : Contrainte unique en base de données empêchant la création de doublons.
+    \item \textbf{Verrouillage du Vote} : Le flag \texttt{hasVoted} est vérifié côté serveur avant toute tentative d'écriture d'un vote.
+\end{itemize}
+
+\chapter{Conclusion et Perspectives}
+
+\section{Bilan}
+Le projet SecureVote a permis de mettre en œuvre une architecture logicielle complexe répondant aux exigences modernes de scalabilité et de sécurité. L'utilisation de Spring Boot couplée à React offre une solution robuste et évolutive. L'interface "Glassmorphism" démontre qu'une application gouvernementale peut être à la fois fonctionnelle et esthétique.
+
+\section{Améliorations Futures}
+\begin{itemize}
+    \item \textbf{Authentification Biométrique} : Remplacer la saisie du CIN par une reconnaissance faciale.
+    \item \textbf{Blockchain} : Stocker les votes dans une blockchain privée pour garantir une immuabilité absolue et auditable publiquement.
+    \item \textbf{Déploiement Docker} : Conteneuriser chaque microservice pour un déploiement orchestré via Kubernetes.
+\end{itemize}
+
+\end{document}
